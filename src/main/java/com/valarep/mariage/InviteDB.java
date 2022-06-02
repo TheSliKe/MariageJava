@@ -25,4 +25,8 @@ public class InviteDB {
     private boolean repas;
     private String plat;
 
+    public static InviteDB.InviteDBBuilder inviteDBBuilder(){
+        return InviteDB.builder();
+    }
+
 }

@@ -6,14 +6,14 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.valarep.mariage.InviteDB.inviteDBBuilder;
+
 @Component
 public class InviteMapper {
 
     InviteDB map(Invite invite){
 
-        return InviteDB.builder()
-                .id(UUID.randomUUID())
-                .creationDate(new Date())
+        return inviteDBBuilder()
                 .nom(invite.getNom())
                 .prenom(invite.getPrenom())
                 .ceremonie(invite.isCeremonie())
@@ -25,7 +25,6 @@ public class InviteMapper {
     }
 
     InviteDB map(InviteDB inviteToUpdate, Invite invite) {
-        inviteToUpdate.setUpdateDate(new Date());
         inviteToUpdate.setNom(invite.getNom());
         inviteToUpdate.setPrenom(invite.getPrenom());
         inviteToUpdate.setCeremonie(invite.isCeremonie());

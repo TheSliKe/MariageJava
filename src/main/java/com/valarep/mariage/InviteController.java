@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,7 +38,11 @@ public class InviteController {
         }
 
         InviteDB inviteDB = inviteMapper.map(invite);
+        inviteDB.setId(UUID.randomUUID());
+        inviteDB.setCreationDate(new Date());
+
         inviteRepository.save(inviteDB);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Saved invité : " + inviteDB.getId());
@@ -56,14 +61,14 @@ public class InviteController {
             return badIdError(inviteId.toString());
         }
 
-        inviteRepository.save(inviteMapper.map(inviteToUpdate.get(), invite));
+        InviteDB inviteDB = inviteMapper.map(inviteToUpdate.get(), invite);
+        inviteDB.setUpdateDate(new Date());
+        inviteRepository.save(inviteDB);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Updated invité : " + inviteId);
     }
-
-
 
     @DeleteMapping("/invite/{inviteId}")
     public ResponseEntity<String> deleteInvite(@RequestHeader(value="api-key") String apikey, @PathVariable(value="inviteId") UUID inviteId){
@@ -79,6 +84,18 @@ public class InviteController {
                 .status(HttpStatus.OK)
                 .body("Deleted invité : " + inviteId);
 
+    }
+
+    @GetMapping("/invite/stats")
+    InviteStats getInviteStats(@RequestHeader(value="api-key") String apikey){
+        return InviteStats.inviteStatsBuilder()
+                .nbPeopleCeremonie(inviteRepository.countByCeremonie(true))
+                .nbPeopleVinHonneur(inviteRepository.countByVinHonneur(true))
+                .nbPeopleRepas(inviteRepository.countByRepas(true))
+                .nbPeopleBoeuf(inviteRepository.countByPlat("boeuf"))
+                .nbPeoplePoisson(inviteRepository.countByPlat("poisson"))
+                .nbPeopleVege(inviteRepository.countByPlat("végé"))
+                .build();
     }
 
     private boolean isPlatValid(Invite invite) {

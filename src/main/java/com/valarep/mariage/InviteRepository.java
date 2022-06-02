@@ -10,4 +10,10 @@ import java.util.UUID;
 public interface InviteRepository extends CrudRepository<InviteDB, String> {
 
     Optional<InviteDB> findById(UUID uuid);
+
+    long countByPlat(String plat);
+    long countByCeremonie(boolean ceremonie);
+    long countByVinHonneur(boolean vinHonneur);
+    long countByRepas(boolean repas);
+
 }
