@@ -1,0 +1,8 @@
+{
+  "nom": "dupale",
+  "prenom": "julien",
+  "ceremonie": true,
+  "vinHonneur": true,
+  "repas": true,
+  "plat": "poisson"
+}
